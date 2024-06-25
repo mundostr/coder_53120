@@ -1,3 +1,12 @@
+/**
+ * Archivo central de configuración
+ * Toma opciones desde línea de comandos y variables de entorno
+ * 
+ * Para las variables de entorno puede usarse dotenv o cargarlas
+ * automáticamente con el soporte nativo de Node (desde v.20.6.x)
+ * usando node --env-file archivo_env src/app
+ */
+
 import path from 'path';
 import { Command } from 'commander';
 
