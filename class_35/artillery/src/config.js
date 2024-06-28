@@ -8,7 +8,11 @@
  */
 
 import path from 'path';
+// import dotenv from 'dotenv';
 import { Command } from 'commander';
+
+// dotenv.config();
+// dotenv.config({ path: 'ruta_archivo_.env'});
 
 const commandLine = new Command();
 commandLine
