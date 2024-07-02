@@ -1,4 +1,5 @@
 import { Router} from 'express';
+import { rateLimiter } from '../utils.js';
 
 import sessionsController from "../controllers/sessions.controller.js";
 import { verifyToken } from "../utils.js";
@@ -17,9 +18,9 @@ router.get('/complex', async (req, res) => {
     res.status(200).send({ status: 'OK', data: total });
 })
 
-router.post('/login', sessionsController.loginUser);
+router.post('/login', rateLimiter(15, 10), sessionsController.loginUser);
 router.post('/register', sessionsController.registerUser);
-router.get('/restorerequest', sessionsController.restoreRequest);
+router.get('/restorerequest', rateLimiter(15, 10), sessionsController.restoreRequest);
 // Este endpoint debe recibir un token válido para continuar
 router.get('/restoreconfirm', verifyToken, sessionsController.restoreConfirm);
 

@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { rateLimit } from 'express-rate-limit';
 
 import config from './config.js';
 
@@ -25,5 +26,15 @@ export const verifyToken = (req, res, next) => {
         if (err) return res.status(403).send({ origin: config.SERVER, payload: 'Token no válido' });
         req.user = payload;
         next();
+    });
+}
+
+export const rateLimiter = (mins, limit) => {
+    return rateLimit({
+        windowMs: mins * 60 * 1000,
+        limit: limit, // por ip por ventana
+        standardHeaders: 'draft-7',
+        legacyHeaders: false,
+        message: { status: 'ERR', data: 'Demasiadas solicitudes de acceso, por favor reintente más tarde' }
     });
 }
