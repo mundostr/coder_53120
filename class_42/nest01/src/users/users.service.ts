@@ -2,40 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-const users = [];
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UsersDocument } from './schema/user.schema';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    users.push(createUserDto);
-    return createUserDto;
+  constructor(@InjectModel(User.name) private model: Model<UsersDocument>) {
   }
 
-  findAll(limit: number) {
-    return users.slice(0, limit);
+  async create(createUserDto: CreateUserDto): Promise<Object> {
+    return { status: 'OK', data: await this.model.create(createUserDto) };
   }
 
-  findOne(id: number) {
-    return users.find(user => user.id === id);
+  async findAll(): Promise<Object> {
+    return { status: 'OK', data: await this.model.find() };
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    const index = users.findIndex(user => user.id === id);
-    if (index === -1) {
-      return 'Not found: cannot update';
-    } else {
-      users[index] = { ...users[index], ...updateUserDto };
-      return users[index];
-    }
+  async findOne(id: string): Promise<Object> {
+    return { status: 'OK', data: await this.model.findById(id) };
   }
 
-  remove(id: number) {
-    const index = users.findIndex(user => user.id === id);
-    if (index === -1) {
-      return 'Not found: cannot delete';
-    } else {
-      users.splice(index, 1);
-      return 'User deleted';
-    }
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<Object> {
+    return { status: 'OK', data: await this.model.findByIdAndUpdate(id, updateUserDto) };
+  }
+
+  async remove(id: string): Promise<Object> {
+    return { status: 'OK', data: await this.model.findByIdAndDelete(id) };
   }
 }

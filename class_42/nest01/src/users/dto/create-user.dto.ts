@@ -8,10 +8,11 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
-    @Transform(({ value }) => value.toUpperCase())
     firstName: string;
-
+    
+    @IsString()
     @IsNotEmpty()
+    @Transform(({ value }) => value.toUpperCase())
     lastName: string;
 
     @IsNotEmpty()
